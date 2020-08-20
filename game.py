@@ -8,4 +8,5 @@ class Game:
     def __init__(self):
         # generate our player for new party
         self.player = Player()
+        self.pressed = {}
 
