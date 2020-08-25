@@ -32,6 +32,9 @@ while running:
     # apply all images of the projectiles group on screen
     game.player.all_projectiles.draw(screen)
 
+    # apply all the images of monster's group
+    game.all_monsters.draw(screen)
+
     # check if the player want to go to the left or to the right
     if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width() :   
             # vérifier si la touche fléche droite est active ET inférieur à la largueur de l'écran + la taille du rectangle de l'image
