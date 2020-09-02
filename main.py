@@ -45,7 +45,7 @@ while running:
     # update the window
     pygame.display.flip()
 
-    # if the player close this windows
+    # get what the player has done
     for event in pygame.event.get(): # event.get() = pour savoir ce que le joueur est en train de faire ex: déplacement avec une touche
         # check if the event is " close the window"
         if event.type == pygame.QUIT:
