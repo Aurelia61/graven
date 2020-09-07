@@ -29,6 +29,11 @@ while running:
     for projectile in game.player.all_projectiles:
         projectile.move()
 
+    # pick up monsters
+    for monster in game.all_monsters:
+        monster.forward()
+        monster.update_health_bar(screen)    # indiquer entre () l'endroit où l'on veut faire aparaitre la jauge
+
     # apply all images of the projectiles group on screen
     game.player.all_projectiles.draw(screen)
 

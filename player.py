@@ -4,8 +4,9 @@ from projectile import Projectile
 # create the first class for the player
 class Player(pygame.sprite.Sprite):    # sprite pour charger le joueur
 
-    def __init__(self) :
+    def __init__(self, game) :   # passer l'instance de la classe game dans les paramètres pour le récupérer comme attribut dans notre classe player
         super().__init__()   # appel de la super class
+        self.game = game
         self.health = 100
         self.max_health = 100
         self.attack = 10     # point d'attaque / degats faits par le joueur
@@ -26,7 +27,10 @@ class Player(pygame.sprite.Sprite):    # sprite pour charger le joueur
         self.all_projectiles.add(Projectile(self))
 
     def move_right(self):    # pour mouvement vers la droite
-        self.rect.x += self.velocity   # récupérer la coordonnée x du joueur et ajouter la vitesse de déplacement du joueur
+        # if the player isn't in collision with a monster, he could move
+        if not self.game.check_collision(self, self.game.all_monsters):
+            self.rect.x += self.velocity   # récupérer la coordonnée x du joueur et ajouter la vitesse de déplacement du joueur
+
 
     def move_left(self):     # pour mouvement vers la gauche
         self.rect.x -= self.velocity   # récupérer la coordonnée x du joueur et retrancher la vitesse de déplacement du joueur
