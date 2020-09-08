@@ -17,7 +17,7 @@ class Monster(pygame.sprite.Sprite):      # la classe Monster hérite de la supe
         self.rect = self.image.get_rect()     # récupère le "rectangle" de l'image comme dimension
         self.rect.x = 1000 + random.randint(0, 300)   # image le plus à droite possible + un chiffre aléatoire pour que les monstres n'apparaissent pas au même endroit (!! récupérer la position au lieu de coder en dur le chiffre !!)
         self.rect.y = 540
-        self.velocity = 2   # vitesse de déplacement du monstre
+        self.velocity = random.randint(1, 3)   # vitesse de déplacement du monstre, ici chiffre aléatoire entre 1 et 3
 
     def damage(self, amount):    # amount, c'est le montant de point de vie perdu
         # inflict the damage
@@ -26,15 +26,17 @@ class Monster(pygame.sprite.Sprite):      # la classe Monster hérite de la supe
         # check if the new number of life point is lower or nul 
         if self.health <= 0 :
             # re-emerge like a new monster  (not delete in the purpose of saving place)
-            # put the monster at the beginning place
-            self.rect.x = 1000
-            # put he health point at the max
+            # put the monster at the beginning place + add a random number for not the same place for each monster
+            self.rect.x = 1000 + random.randint(0, 300)
+            # chose a new velocity for the new monster (random)
+            self.velocity = random.randint(1, 3)
+            # put the health point at the max
             self.health = self.max_health
 
 
 
 
-    def update_health_bar(self, surface):   # surface = l'endroit où^on va placer la jauge
+    def update_health_bar(self, surface):   # surface = l'endroit où on va placer la jauge
         # define a color for the life bar (green)
         bar_color = (111, 210, 46)
 
@@ -56,6 +58,10 @@ class Monster(pygame.sprite.Sprite):      # la classe Monster hérite de la supe
         # movement only if there isn't a collision with the groupe de player
         if not self.game.check_collision(self, self.game.all_players) :   # le premier self correspond au monster
             self.rect.x -= self.velocity    # récupérer les coordonnées du monstre et faire déplacer le monstre vers le joueur, donc "-"
+        # if the monster is in collide with the player
+        else:
+            # inflict damage to the player
+            self.game.player.damage(self.attack)
 
 
 

@@ -1,4 +1,5 @@
 import pygame
+import math
 from game import Game   # à partir du fichier game importe la class Game
 pygame.init()
 
@@ -9,6 +10,19 @@ screen = pygame.display.set_mode((1080,720))      # dimension de la fenetre(larg
 
 # import game background
 background = pygame.image.load('assets/bg.jpg') # = ARRIERE PLAN
+
+# import the banner of the game
+banner = pygame.image.load('assets/banner.png')
+banner = pygame.transform.scale(banner, (500, 500))   # transforme la taille de l'image (hauteur et largueur)
+banner_rect = banner.get_rect()
+banner_rect.x = math.ceil(screen.get_width() / 4)    # récupérer la largeur de l'écran est divisé par 4 pour mettre la banière au centre de l'écran
+
+# import a button to play
+play_button = pygame.image.load('assets/button.png')
+play_button = pygame.transform.scale(play_button, (400, 150))
+play_button_rect = play_button.get_rect()
+play_button_rect.x = math.ceil(screen.get_width() / 3.33)    # un tier de la largeur
+play_button_rect.y = math.ceil(screen.get_height() / 2 )
 
 # download the game
 game = Game()
@@ -22,30 +36,18 @@ while running:
     # show the game background on a specific place on screen
     screen.blit(background, (-1000,-200))    #(largeur, hauteur # (0, 0) = au centre)
 
-    # show the player
-    screen.blit(game.player.image, game.player.rect)    # player.rect = placement du rectangle du joueur
+    # check if the game has started or not
+    if game.is_playing:
+        # start the game
+        game.update(screen)
+    # check if the game isn't started
+    else:
+        # add the welcome screen
+        # with the button play behind the banner
+        screen.blit(play_button, play_button_rect)
+        # show the banner
+        screen.blit(banner, banner_rect)   # coordonnées du rectangle de la bannière ou mettre le typle(0,0) qui est la position en x et y
 
-    # pick up projectiles of the player
-    for projectile in game.player.all_projectiles:
-        projectile.move()
-
-    # pick up monsters
-    for monster in game.all_monsters:
-        monster.forward()
-        monster.update_health_bar(screen)    # indiquer entre () l'endroit où l'on veut faire aparaitre la jauge
-
-    # apply all images of the projectiles group on screen
-    game.player.all_projectiles.draw(screen)
-
-    # apply all the images of monster's group
-    game.all_monsters.draw(screen)
-
-    # check if the player want to go to the left or to the right
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width() :   
-            # vérifier si la touche fléche droite est active ET inférieur à la largueur de l'écran + la taille du rectangle de l'image
-        game.player.move_right()           # si oui activer la méthode bouger à droite du joueur
-    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:   # vérifier si la touche fléche gauche est active ET si le joueur ne se déplace pas au delà de l'écran
-        game.player.move_left()  
 
     # update the window
     pygame.display.flip()
@@ -56,7 +58,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()  # pour quitter l'application du jeu
-            print("\nLa fenetre est fermée !\n")
+            print("\nLa fenêtre est fermée !\n")
         # detect if the player release a key from the keypad
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
@@ -75,6 +77,14 @@ while running:
             # # if left arrow
             # if event.key == pygame.K_LEFT:
             #     game.player.move_left()    # récupérer le player et le faire bouger vers la gauche
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            # check if the mouse is in collision with the button play
+            if play_button_rect.collidepoint(event.pos):    # si cette collision est vraie, cela veut dire que le joueur a cliqué sur le bouton
+                # launch the game
+                game.start()
+
+
 
 
 

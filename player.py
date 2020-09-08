@@ -17,6 +17,32 @@ class Player(pygame.sprite.Sprite):    # sprite pour charger le joueur
         self.rect.x = 400     # en partant de gauche
         self.rect.y = 500     # en partant du haut
 
+    def damage(self, amount):
+        # check if the player could have damage
+        if self.health - amount > amount:
+            self.health -= amount
+        # if the player has no more life point
+        else:
+            self.game.game_over()
+
+
+    def update_health_bar(self, surface):   # surface = l'endroit où on va placer la jauge
+        # define a color for the life bar (green)
+        bar_color = (111, 210, 46)
+
+        # define a color for the background of the bar (grey)
+        back_bar_color = (60, 63, 60)
+
+        # define the position (X, Y) of the life bar, also the Weight (depend on life point) and the Height 
+        bar_position = [self.rect.x + 50, self.rect.y + 20, self.health, 7]    # [X, Y, W, H] H = hauteur de la jauge en pixel
+        
+        # definir the position of the background of the life bar
+        back_bar_position = [self.rect.x + 50, self.rect.y + 20, self.max_health, 7]
+
+        # draw our life bar
+        pygame.draw.rect(surface, back_bar_color, back_bar_position)    # mettre la jauge qui fait la longueur max (le fond gris) avant la jauge de vie pour que cette dernière soit visible
+        pygame.draw.rect(surface, bar_color, bar_position)   # créer un rectangle sur la surface qu'on a récupérer avec une certaine couleur et à une certaine position
+
 
     def launch_projectile(self):     
         """launch the projectile
